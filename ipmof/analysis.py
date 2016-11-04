@@ -25,7 +25,7 @@ def read_interpenetration_results(results_path):
     return sim_par, structure_info, summary
 
 
-def regenerate_structures(results_dir, colorify=True, file_format='cif', num=5):
+def regenerate_structures(results_dir, export_dir=None, colorify=True, file_format='cif', num=5):
     """
     Regenerates interpenetrated structures from given results.yaml file.
     """
@@ -40,7 +40,8 @@ def regenerate_structures(results_dir, colorify=True, file_format='cif', num=5):
 
     s1_name = structure_info[0]['S1']
     s2_name = structure_info[0]['S2']
-    export_dir = results_dir
+    if export_dir is None:
+        export_dir = results_dir
     sim_par, sim_dir = read_parameters()
 
     for s_idx in range(1, num + 1):
