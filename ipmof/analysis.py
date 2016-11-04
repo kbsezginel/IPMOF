@@ -5,6 +5,7 @@ import os
 import math
 
 import yaml
+import numpy as np
 
 from ipmof.parameters import read_parameters
 from ipmof.interpenetration import regenerate
@@ -272,3 +273,47 @@ def get_progress(results_dir, export_dir=None, total=None, dir_sep=False):
         p.write(tabulate(table, headers=header))
         p.write('\n\nTable with directories sorted according to the number of combinations:\n\n')
         p.write(tabulate(sorted_table, headers=header[:2]))
+
+
+def get_scatter_data(results_dir, vf_list, tag='', export_dir=None, error=True):
+    """ Get scatter data from a directory of results.yaml files
+        kwargs:
+         - error = True / False
+           Error information can be printed for missing / corrupt results.
+    """
+    if export_dir is None:
+        export_dir = os.getcwd()
+
+    scatter_data = []
+    error_messages = ''
+
+    combination_list = os.listdir(results_dir)
+    combination_list = [os.path.join(results_dir, i) for i in combination_list]
+
+    for mof_combination in combination_list:
+        results_path = os.path.join(mof_combination, 'results.yaml')
+        if not os.path.isfile(results_path):
+            error_messages += '%s -> No results file\n' % results_path
+        else:
+            try:
+                sim_par, structure_info, summary = read_interpenetration_results(results_path)
+                pass
+            except Exception as e:
+                error_messages += '%s -> Error: %s\n' % (results_path, e)
+                continue
+            mof1 = structure_info[0]['S1']
+            mof2 = structure_info[0]['S2']
+            mof1_vf = vf_list['vf'][vf_list['mof'].index(mof1)]
+            mof2_vf = vf_list['vf'][vf_list['mof'].index(mof2)]
+            num_of_structures = structure_info[0]['Structures']
+
+            scatter_data.append([mof1, mof2, mof1_vf, mof2_vf, num_of_structures])
+
+    scatter_data_path = os.path.join(export_dir, 'scatter_data_%s' % tag)
+    scatter_numpy = np.array(scatter_data)
+    np.save(scatter_data_path, scatter_numpy)
+
+    if error:
+        error_log_path = os.path.join(export_dir, 'scatter_error_%s.txt' % tag)
+        with open(error_log_path, 'w') as f:
+            f.write(error_messages)
