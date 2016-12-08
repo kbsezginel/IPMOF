@@ -64,6 +64,11 @@ class MOF:
             self.sigma.append(ff_param[i][1])
             self.epsilon.append(ff_param[i][2])
 
+    def calculate_vectors(self):
+        """ Calculates unit cell vectors and edge points """
+        self.uc_vectors = Packing.uc_vectors(self.uc_size, self.uc_angle)
+        self.edge_points = Packing.edge_points(self.uc_vectors)
+
     def extend_unit_cell(self, cut_off):
         """
         Extends unit cell of a MOF object according to a given cut_off value.
@@ -76,11 +81,10 @@ class MOF:
         - A high cut off value such as 100 Angstrom can be used to ensure there is no collisions
         between the interpenetrating layers.
         """
+        self.calculate_vectors()
         self.packing_factor = Packing.factor(self.uc_size, cut_off)
-        uc_vectors = Packing.uc_vectors(self.uc_size, self.uc_angle)
-        trans_vec = Packing.translation_vectors(self.packing_factor, uc_vectors)
-        self.packed_coors = Packing.uc_coors(trans_vec, self.packing_factor, uc_vectors, self.atom_coors)
-        self.edge_points = Packing.edge_points(uc_vectors)
+        trans_vec = Packing.translation_vectors(self.packing_factor, self.uc_vectors)
+        self.packed_coors = Packing.uc_coors(trans_vec, self.packing_factor, self.uc_vectors, self.atom_coors)
 
         extended_structure = {'atom_names': [], 'atom_coors': [], 'name': self.name}
         for unit_cell in self.packed_coors:
