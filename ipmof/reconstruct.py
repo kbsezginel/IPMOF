@@ -36,3 +36,20 @@ def common_cell_parameters(mof1, mof2, tolerance=1):
     scaling_factor = [round(i) / i for i in lcm2]       # Scaling factor for UC2
     distortion = sum([abs((i - round(i))) / round(i) * 100 for i in lcm2])  # Cell distortion percent
     return dict(lcm1=lcm1, lcm2=lcm2_round, lcm2_actual=lcm2, sf=scaling_factor, dist=distortion)
+
+
+def reshape(mof, rotation, initial_coordinate):
+    """ Apply rotation and translation operations to given MOF """
+    first_point = initial_coordinate
+    x_angle, y_angle, z_angle = [math.radians(a) for a in rotation]
+    structure = {'atom_names': [], 'atom_coors': [], 'name': mof.name}
+    rot_coor = mof.packed_coors[0][0]
+    translation_vector = sub3(first_point, rot_coor)
+    for unit_cell in mof.packed_coors:
+        for atom_coor in unit_cell:
+            rot_coor = atom_coor
+            rot_coor = xyz_rotation(rot_coor, [x_angle, y_angle, z_angle])
+            new_coor = add3(rot_coor, translation_vector)
+            structure['atom_coors'].append(new_coor)
+    structure['atom_names'] = len(mof.packed_coors) * mof.atom_names
+    return structure
