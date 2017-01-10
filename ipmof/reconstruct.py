@@ -1,11 +1,14 @@
 # IPMOF Functions for reconstructing unit cell and finding common unit cell
 # Date: January 2017
 # Author: Kutay B. Sezginel
+import math
+from ipmof.geometry import car2frac, frac2car, sub3, add3, xyz_rotation
 
 
 def lcm(x, tolerance=1):
-    """ Calculates least common multiplier for 1 and a given number
-        with a tolerance given in percentage """
+    """
+    Calculates least common multiplier for 1 and a given number with a tolerance given in percentage
+    """
     tolerance = 100 / tolerance
     multiplier = max(int(x), 1)
     multiplier_found = False
@@ -29,7 +32,7 @@ def common_cell_parameters(mof1, mof2, tolerance=1):
     if not hasattr(mof2, 'edge_points'):
         mof2.extend_unit_cell(pack=[1, 1, 1])
     v111 = mof2.edge_points[-1]                         # 111 vector for UC2
-    v111 = frac3(v111, mof1.to_frac)                    # Convert to fractional for UC1
+    v111 = car2frac(v111, mof1.to_frac)                 # Convert to fractional for UC1
     lcm1 = [lcm(i, tolerance=tolerance) for i in v111]  # Calculate lcm for each dimension
     lcm2 = [lcm1[i] / v for i, v in enumerate(v111)]    # Divide lcm to vector for lcm2 -> actual lcm2
     lcm2_round = [int(round(i)) for i in lcm2]          # Calculate lcm round -> lcm2
@@ -39,7 +42,11 @@ def common_cell_parameters(mof1, mof2, tolerance=1):
 
 
 def reshape(mof, rotation, initial_coordinate):
-    """ Apply rotation and translation operations to given MOF """
+    """
+    Apply rotation and translation operations to given MOF
+        - rotation = [x_angle, y_angle, z_angle] in degrees
+        - initial_coordinate = [x, y, z] in cartesian coordinates
+    """
     first_point = initial_coordinate
     x_angle, y_angle, z_angle = [math.radians(a) for a in rotation]
     structure = {'atom_names': [], 'atom_coors': [], 'name': mof.name}
@@ -50,6 +57,30 @@ def reshape(mof, rotation, initial_coordinate):
             rot_coor = atom_coor
             rot_coor = xyz_rotation(rot_coor, [x_angle, y_angle, z_angle])
             new_coor = add3(rot_coor, translation_vector)
+            structure['atom_coors'].append(new_coor)
+    structure['atom_names'] = len(mof.packed_coors) * mof.atom_names
+    return structure
+
+
+def rescale(mof, scaling_factor):
+    """
+    Rescale unit cell of a MOF object in a, b, c vectors by given amount in list format
+    """
+    structure = {'atom_names': [], 'atom_coors': [], 'name': mof.name}
+    if not hasattr(mof, 'packing_factor'):
+        mof.extend_unit_cell(pack=[1, 1, 1])
+    to_frac = mof.to_frac
+    to_car = mof.to_car
+    for unit_cell in mof.packed_coors:
+        for atom_coor in unit_cell:
+            # Convert to fractional
+            frac_coor = car2frac(atom_coor, to_frac)
+            # Scale
+            scaled_coor = [i * j for i, j in zip(scaling_factor, frac_coor)]
+            # Apply pbc (using common unit cell parameters)
+            pbc_coor = [i - math.floor(i) for i in scaled_coor]
+            # Convert to cartesian
+            new_coor = frac2car(pbc_coor, to_car)
             structure['atom_coors'].append(new_coor)
     structure['atom_names'] = len(mof.packed_coors) * mof.atom_names
     return structure
