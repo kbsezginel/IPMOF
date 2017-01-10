@@ -440,7 +440,7 @@ def export_structures(sim_par, base_mof, mobile_mof, min_energy_structure, emap,
 
     if sim_par['export_packed']:
         # Pack new structure by using rotation and first point information
-        extended_structure = base_mof.extend_unit_cell(sim_par['cut_off'])
+        extended_structure = base_mof.extend_unit_cell(cut_off=sim_par['cut_off'])
         packed_structure = save_extension(sim_par, base_mof, mobile_mof, emap, atom_list, min_energy_structure)
         joined_structure = {'atom_coors': packed_structure['atom_coors'] + extended_structure['atom_coors'],
                             'atom_names': packed_structure['atom_names'] + extended_structure['atom_names'],
@@ -451,7 +451,7 @@ def export_structures(sim_par, base_mof, mobile_mof, min_energy_structure, emap,
 
     if sim_par['export_packed_color']:
         # Pack new structure by using rotation and first point information
-        extended_structure = base_mof.extend_unit_cell(sim_par['cut_off'])
+        extended_structure = base_mof.extend_unit_cell(cut_off=sim_par['cut_off'])
         packed_structure = save_extension(sim_par, base_mof, mobile_mof, emap, atom_list, min_energy_structure)
         joined_structure = {'atom_coors': packed_structure['atom_coors'] + extended_structure['atom_coors'],
                             'atom_names': ['C'] * len(packed_structure['atom_names']) +

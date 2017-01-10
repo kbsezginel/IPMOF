@@ -69,11 +69,15 @@ class MOF:
         self.uc_vectors = Packing.uc_vectors(self.uc_size, self.uc_angle)
         self.edge_points = Packing.edge_points(self.uc_vectors)
 
-    def extend_unit_cell(self, cut_off):
+    def extend_unit_cell(self, cut_off=None, pack=None):
         """
-        Extends unit cell of a MOF object according to a given cut_off value.
-        The structure is extended so that all the points in the center unit cell are
-        at least *cut_off Angstroms away.
+        Extends unit cell of a MOF object according to a given cut_off value or packing list.
+        If both are given pack argument has priority over cut_off.
+        - pack=[x, y, z]
+            Extends unit cell [(x) x (y) x (z)]
+        - cut_off=*number
+            The structure is extended so that all the points in the center unit cell are
+            at least *cut_off Angstroms away.
         This enables energy map calculation by providing coordinates for surrounding atoms.
         Also enables checking for collisions in the extended unit cell of mobile layer
         and energy map.
@@ -82,7 +86,12 @@ class MOF:
         between the interpenetrating layers.
         """
         self.calculate_vectors()
-        self.packing_factor = Packing.factor(self.uc_size, cut_off)
+        if pack is not None:
+            self.packing_factor = pack
+        elif cut_off is not None:
+            self.packing_factor = Packing.factor(self.uc_size, cut_off)
+        else:
+            print('Please enter packing factor or cut_off value!')
         trans_vec = Packing.translation_vectors(self.packing_factor, self.uc_vectors)
         self.packed_coors = Packing.uc_coors(trans_vec, self.packing_factor, self.uc_vectors, self.atom_coors)
 
