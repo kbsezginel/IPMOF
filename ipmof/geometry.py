@@ -68,6 +68,26 @@ def pbc3(pbc_coor, to_frac, to_car):
     return [x_frac, y_frac, z_frac]
 
 
+def car2frac(car_coor, to_frac):
+    """ Convert cartesian coordinates to fractional coordinates.
+        Requires 'to_frac' constants which is calculated for MOF objects. """
+    x, y, z = car_coor
+    x_frac = to_frac[0] * x + to_frac[1] * y + to_frac[2] * z
+    y_frac = to_frac[3] * y + to_frac[4] * z
+    z_frac = to_frac[5] * z
+    return [x_frac, y_frac, z_frac]
+
+
+def frac2car(frac_coor, to_car):
+    """ Convert fractional coordinates to cartesian coordinates.
+        Requires 'to_car' constants which is calculated for MOF objects. """
+    x_frac, y_frac, z_frac = frac_coor
+    x = to_car[0] * x_frac + to_car[1] * y_frac + to_car[2] * z_frac
+    y = to_car[3] * y_frac + to_car[4] * z_frac
+    z = to_car[5] * z_frac
+    return [x, y, z]
+
+
 def possible_rotations(rot_degree, num_of_points=10):
     """ Calculate possible degrees of rotation about x, y, z axes for given rotation freedom. """
     # Calculate possible rotation angles for the given rotation freedom
