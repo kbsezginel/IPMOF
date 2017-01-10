@@ -23,6 +23,7 @@ class MOF:
             self.atom_coors = molecule['atom_coors']
             self.atom_names = molecule['atom_names']
             self.name = molecule['name']
+            self.path = file_path
         else:
             self.path = file_path
             self.name, file_format = os.path.splitext(os.path.basename(file_path))
@@ -175,6 +176,18 @@ class MOF:
         yc2 = c * (uc_cos[0] - uc_cos[1] * uc_cos[2]) / uc_sin[2]
         zc1 = c * v / uc_sin[2]
         self.to_car = [xc1, xc2, xc3, yc1, yc2, zc1]
+
+    def clone(self):
+        """
+        Clones MOF object into a new MOF object
+        """
+        if self.path is str:
+            clone_mof = MOF(self.path)
+        elif self.path is dict:
+            clone_mof = MOF(self.path, file_format='dict')
+        if hasattr(self, 'packing_fractor'):
+            clone_mof.extend_unit_cell(pack=self.packing_factor)
+        return clone_mof
 
     def join(self, new_mof, colorify=False, atom_color=['C', 'O']):
         """
