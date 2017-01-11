@@ -181,11 +181,11 @@ class MOF:
         """
         Clones MOF object into a new MOF object
         """
-        if self.path is str:
+        if type(self.path) is str:
             clone_mof = MOF(self.path)
-        elif self.path is dict:
+        elif type(self.path) is dict:
             clone_mof = MOF(self.path, file_format='dict')
-        if hasattr(self, 'packing_fractor'):
+        if hasattr(self, 'packing_factor'):
             clone_mof.extend_unit_cell(pack=self.packing_factor)
         return clone_mof
 
