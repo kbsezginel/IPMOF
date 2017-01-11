@@ -84,3 +84,49 @@ def rescale(mof, scaling_factor):
             structure['atom_coors'].append(new_coor)
     structure['atom_names'] = len(mof.packed_coors) * mof.atom_names
     return structure
+
+
+def get_common_cell(mof1, mof2, rotation, initial_coordinate, export_dir=os.getcwd(), colorify=False):
+    """
+    Export common cell for two given MOFs with rotation ans translation for active MOF.
+        - rotation = [x_angle, y_angle, z_angle] -> Rotate atoms in degrees around each axis.
+        - initial_coordinate = [x, y, z] -> Translate atoms in cartesian coordinates.
+        - colorify=True/False -> Export unit cells with assigned atom name for each cell.
+    """
+    # 1. Get common cell parameters
+    common_cell = common_cell_parameters(mof1, mof2)
+    # 2. Extend both MOFs according to new cell parameters
+    extended1 = mof1.extend_unit_cell(pack=common_cell['lcm1'])
+    extended2 = mof2.extend_unit_cell(pack=common_cell['lcm2'])
+    # 3. Apply rotation and translation to second MOF
+    extended2 = reshape(mof2, rotation, initial_coordinate)
+    # 4. Scale second MOF to fit rounded least common multiplier
+    common_uc_size = [i * j for i, j in zip(mof1.uc_size, common_cell['lcm1'])]
+    common_uc_angle = mof1.uc_angle
+    new_mof2 = MOF(extended2, file_format='dict')
+    new_mof2.uc_size = common_uc_size
+    new_mof2.uc_angle = common_uc_angle
+    new_mof2.unit_cell_volume()
+    new_mof2.pbc_parameters()
+    extended2 = rescale(new_mof2, common_cell['sf'])
+    new_mof2 = MOF(extended2, file_format='dict')
+    # 5. Join extended MOFs into single common cell and export
+    new_mof1 = mof1.clone()
+    if len(mof1.packed_coors) > 1:
+        for cell in mof1.packed_coors[1:]:
+            for coor, name in zip(cell, mof1.atom_names):
+                atom = Atom(symbol=name, position=coor)
+                mof1.ase_atoms.append(atom)
+    a, b, c = common_uc_size
+    alpha, beta, gamma = common_uc_angle
+    if colorify:
+        joined_mof_color = new_mof1.join(new_mof2, colorify=True)
+        joined_mof_color.name = '%s_%sJC' % (mof1.name, mof2.name)
+        joined_mof_color.ase_atoms.set_cell([a, b, c, alpha, beta, gamma])
+        joined_mof_color.export(export_dir, file_format='cif')
+
+    else:
+        joined_mof = new_mof1.join(new_mof2, colorify=False)
+        joined_mof.name = '%s_%sJ' % (mof1.name, mof2.name)
+        joined_mof.ase_atoms.set_cell([a, b, c, alpha, beta, gamma])
+        joined_mof.export(export_dir, file_format='cif')
