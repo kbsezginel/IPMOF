@@ -1,5 +1,6 @@
 # IPMOF
 ### Discovering interpenetration in MOFs
+![alt text][Fig0]
 
 ## Installation
 IPMOF uses Python 3.5.1 with required libraries listed in requirements.txt file.
@@ -12,56 +13,47 @@ To install dependencies just type:
 IPMOF reads structure files from the mof folder in root directory.
 
 The default file reader is ASE and IPMOF supports all the file formats supported by ASE.
-A list of the formats supported by ASE is given here: https://wiki.fysik.dtu.dk/ase/ase/io/io.html
+A list of the formats supported by ASE is given [here][ASE-formats].
 
 In order to test IPMOF there is one MOF file (MOF-5 / REFCODE: SAHYIK) in the 'mof' directory.
+Using default simulation parameters homo-interpenetrated MOF-5 structure can be generated in 'results' directory.
+
+## Algorithm Description
+![alt text][Animation1]
+
+IPMOF tests whether two given MOFs can interpenetrate each other by rapidly trying different relative orientations of the two frameworks and reports the plausibly energetically favorable ones. The algorithm tries many different orientations of two given MOFs by performing rotation and translation operations according to user configurable parameters. After an orientation is chosen, its energetic favorability is calculated based on the pairwise interactions between each atom on one framework with every atom on the other framework. Overall, IPMOF can rapidly detect cases where interpenetration is impossible, and suggest ones where it may be plausible. A flowchart is provided below.
 
 ## Energy Map
-IPMOF is separated into two parts where first a 3D potential energy map is constructed and then
-interpenetration is tested making use of this energy map. This allows user to rapidly test
-interpenetration many times with different simulation parameters or different MOF combinations
-using the same energy map.
+![alt text][Fig1]
 
-Energy map is exported as a numpy array consisting of 3D coordinates and energy values.
-The energy values correspond to energy penalties for inserting an atom to a particular position.
-As a result energy map is dependent on types of atoms. There are four types of atom lists that
-can be used to generate the atom list for a particular MOF:
+An energy map is a regular grid of points representing the potential energy inside the crystal unit cell, from the perspective of an atom being inserted into that space. The potential energy for each point in the grid is calculated using [Lennard-Jones potential][LJ-Wikipedia] with built-in parameters provided for [Universal Force Field (UFF)][UFF-ref] and [DREIDING][DRE-ref] force fields.
+
+Energy map is exported as a numpy array consisting of 3D coordinates and energy values for different types of atoms. There are four options that can be used to generate the atom list for a particular energy map:
 - 'full': Full atom list in the force field parameters database. (103 atoms)
 - 'uniq': Unique atoms for a given list of MOFs
 - 'dummy': Single dummy atom with predefined force field parameters
-- 'qnd': Simplified atom list consisting of 1 dummy atom and 10 most frequent atoms in MOFs
+- 'qnd': Simplified atom list consisting of 1 dummy atom and 10 most frequent atoms in CoRE MOF database
 
-The runtime of the energy map and interpenetration codes depend on this parameter in the following
-fashion: 'full' > 'uniq' > 'qnd' > 'dummy'. The accuracy of the results depend on the set of MOFs
-however in general it follows the same trend: 'full' ~ 'uniq' > 'qnd' > 'dummy'. All list types
-except for 'uniq' allows checking interpenetration of the energy map MOF with any other MOF.
-The 'uniq' energy map uses only the atoms in the given MOF set, therefore any other MOF that
-has other types of atoms requires new energy map. 'uniq' and 'qnd' enery map types were designed
-to work with large scale screening calculations to have one type of energy map for large
-amount of MOF combinations. 'full' energy map can also be used in the same application to
-increase accuracy however that would result in slower runtime and bigger file sizes for energy maps.
+The runtime of the energy map generation and interpenetration tests depend on the selection of atom list in the following
+fashion: 'full' > 'uniq' > 'qnd' > 'dummy'. All list types except for 'uniq' allows checking interpenetration of the passive MOF with any other MOF. The 'uniq' energy map uses only the atoms in the given MOF set, therefore any other MOF that has other types of atoms requires new energy map. 'qnd' and 'dummy' enery map types were designed to work with large scale screening calculations to have one type of energy map for large amount of MOF combinations. 'full' energy map can also be used in the same application to increase accuracy however that would result in slower runtime and bigger file sizes for energy maps.
 
-To generate energy map type following in a terminal window:
+**To generate energy map type following in a command-line window:**
 
 `python ipmof_energymap.py`
 
-By default this will create energy maps for each MOF file in ~/mof directory.
-The atom list and energy map are stored as a numpy array. This can be changed to a human
-readable format (yaml) by changing the 'energy_map_type' simulation parameter to 'yaml'.
+By default this will create energy maps for each MOF file in ~/mof directory. The atom list and energy map are stored as a numpy array. This can be changed to a human readable format (yaml) by changing the 'energy_map_type' simulation parameter to 'yaml'.
 
 ## Interpenetration
-After energy map is generated interpenetration of two MOFs can be tested.
-Energy map is required only for one of the MOFs (should be in ~/energymap) and structure files
-(such as 'cif') are required for both MOFs (should be in ~/mof).
+![alt text][Fig2]
+After generating the energy map for the _passive_ MOF, an _active_ MOF is selected to test interpenetration. The _active_ unit cell is first aligned with the _passive_ unit cell and then rotated around the global x, y, and z axes by increments defined by the user. Then the _active_ unit cell is translated in x, y, and z directions, also by increments defined by the user, within the _passive_ unit cell. After testing all orientations the most favorable ones (if any) are reported.
 
-To test intepenetration type following in a terminal window:
+Energy map is required only for the _passive_ MOF (should be in ~/energymap) and structure files (such as 'cif') are required for both MOFs (should be in ~/mof).
+
+**To test intepenetration type following in a command-line window:**
 
 `python ipmof_interpenetration.py`
 
-Simulation summary, simulation parameters, and information on discovered structures will be
-exported to ~/results/*Structure1_Structure2*/results.yaml. Methods to analyze results are
-included in ~ipmof/analysis.py library. The structures discovered will be exported to
-~/results/*Structure1_Structure2*.
+Simulation summary, simulation parameters, and information on discovered structures will be exported to ~/results/*Structure1_Structure2*/results.yaml. Methods to analyze results are included in ~ipmof/analysis.py library. The structures discovered will be exported to ~/results/*Structure1_Structure2*.
 
 ### Simulation Parameters
 Default simulation parameters are read from ~/ipmof/parameters.py.
@@ -84,7 +76,7 @@ To get a better understanding of the functions used in ipmof libraries and/or an
 results you can go through jupyter notebook files in '/doc' directory.
 
 This directory also contains force field parameters (UFF and DRE) and supplementary information for
-MOFs in CoRE database (10.1021/cm502594j).
+MOFs in [CoRE database][CORE-ref].
 
 ### Contact
 For any questions, ideas or feedback please contact me!
@@ -92,3 +84,18 @@ For any questions, ideas or feedback please contact me!
 mail: kbs37@pitt.edu
 
 http://wilmerlab.com/
+
+### Algorithm Flowsheet
+![alt text][Fig3]
+
+[Fig0]: https://github.com/kbsezginel/IPMOF/blob/documentation/doc/Figures/Fig0.PNG "CandidateStructures"
+[Fig1]: https://github.com/kbsezginel/IPMOF/blob/documentation/doc/Figures/Fig1.PNG "Energymap"
+[Fig2]: https://github.com/kbsezginel/IPMOF/blob/documentation/doc/Figures/Fig2.PNG "Interpenetration"
+[Fig3]: https://github.com/kbsezginel/IPMOF/blob/documentation/doc/Figures/Fig3.PNG "AlgorithmFlowsheet"
+[Animation1]:  https://github.com/kbsezginel/IPMOF/blob/documentation/doc/Figures/UQOFOX_VEHJUP_rotation.gif "Rotation"
+
+[ASE-formats]: https://wiki.fysik.dtu.dk/ase/ase/io/io.html
+[LJ-wikipedia]: https://en.wikipedia.org/wiki/Lennard-Jones_potential
+[UFF-ref]: http://pubs.acs.org/doi/abs/10.1021/ja00051a040
+[DRE-ref]: http://pubs.acs.org/doi/abs/10.1021/j100389a010
+[CORE-ref]: http://pubs.acs.org/doi/abs/10.1021/cm502594j
