@@ -14,4 +14,3 @@ launch_workers_qsub.sh~
 ipmof_qsub.sh
 ipmof_qsub.sh~
 ipmof.o*
-doc/notebooks

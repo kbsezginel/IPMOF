@@ -38,6 +38,7 @@ main_dir = os.getcwd()
 python_lib_dir = os.path.join(main_dir, 'ipmof')
 force_field_path = os.path.join(main_dir, 'doc', 'FF_Parameters.xlsx')
 core_path = os.path.join(main_dir, 'doc', 'CoRE.xlsx')
+vf_list_path = os.path.join(main_dir, 'doc', 'core_mof_vf_list.yaml')
 core_mof_dir = r'CoRE MOFs database directory'
 mof_dir = os.path.join(main_dir, 'mof')
 energy_map_dir = os.path.join(main_dir, 'energymap')
@@ -58,6 +59,7 @@ sim_dir_data = {'main_dir': main_dir,
                 'energy_map_dir': energy_map_dir,
                 'export_dir': export_dir,
                 'settings_dir': settings_dir,
+                'vf_list_path': vf_list_path
                 }
 
 

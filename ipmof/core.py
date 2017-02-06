@@ -127,10 +127,10 @@ def core_mof_vf_list(target_vf, vf_list_path, limit=math.inf):
     return vf_mofs
 
 
-def core_interpenetration_list(sim_dir, limit=math.inf):
+def core_interpenetration_list(sim_dir, limit=math.inf, target_vf=1.0):
     """ Generate interpenetration list from a given MOF combination list """
     vf_list_path = os.path.join(sim_dir['main_dir'], 'doc', 'core_mof_vf_list.yaml')
-    mof_list = core_mof_vf_list(1.0, vf_list_path, limit=limit)
+    mof_list = core_mof_vf_list(target_vf, vf_list_path, limit=limit)
     emap_dir = sim_dir['energy_map_dir']
     mof_dir = sim_dir['mof_dir']
     interpenetration_list = []
