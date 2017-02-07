@@ -149,12 +149,12 @@ def get_common_cell(mof1, mof2, rotation, initial_coordinate, limit=10, toleranc
             a, b, c = common_uc_size
             alpha, beta, gamma = common_uc_angle
             joined_mof = new_mof1.join(new_mof2, colorify=False)
-            joined_mof.name = '%s_%sJ' % (mof1.name, mof2.name)
+            joined_mof.name = '%s_%s_supercell' % (mof1.name, mof2.name)
             joined_mof.ase_atoms.set_cell([a, b, c, alpha, beta, gamma])
             joined_mof.export(export_dir, file_format='cif')
             if colorify:
                 joined_mof_color = new_mof1.join(new_mof2, colorify=True)
-                joined_mof_color.name = '%s_%sJC' % (mof1.name, mof2.name)
+                joined_mof_color.name = '%s_%s_supercell_color' % (mof1.name, mof2.name)
                 joined_mof_color.ase_atoms.set_cell([a, b, c, alpha, beta, gamma])
                 joined_mof_color.export(export_dir, file_format='cif')
         else:

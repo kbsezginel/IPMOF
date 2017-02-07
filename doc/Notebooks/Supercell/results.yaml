@@ -1,0 +1,197 @@
+simulation_parameters:
+    atom_energy_limit: 100000000.0
+    check_extension: true
+    core_database: true
+    core_limit: 1000000
+    cut_off: 12
+    directory_separation: true
+    energy_density_limit: 0.1
+    energy_map_atom_list: qnd
+    energy_map_type: numpy
+    export_format: cif
+    export_packed: false
+    export_packed_color: false
+    export_pbc: true
+    export_single: true
+    export_single_color: true
+    export_structures: 20
+    export_summary: true
+    ext_cut_off: 50
+    force_field: uff
+    grid_size: 1
+    report_structures: 20
+    rotation_freedom: 90
+    rotation_limit: 24
+    self_interpenetration: true
+    structure_energy_limit: 100000000.0
+    summary_percent: 5
+    try_all_rotations: true
+---
+structure_info:
+- {S1: LEHXUT_clean, S2: XAMDUM02_clean, Structures: 109}
+-   collision: {coor: null, exist: false, pbc_coor: null}
+    energy: -21663.214
+    energy_density: -4.769
+    initial_coordinate: [28.0, 31.0, 13.0]
+    rotation: [0, 0, 0]
+-   collision:
+        coor: [-73.948, 72.065, 57.387]
+        exist: true
+        pbc_coor: [37.542, 29.152, 27.043]
+    energy: -21226.48
+    energy_density: -4.673
+    initial_coordinate: [19.0, 17.0, 11.0]
+    rotation: [0, 180, 180]
+-   collision:
+        coor: [-48.357, 79.125, 63.579]
+        exist: true
+        pbc_coor: [44.552, 25.484, 2.892]
+    energy: -20921.146
+    energy_density: -4.606
+    initial_coordinate: [28.0, 22.0, 25.0]
+    rotation: [0, 180, 180]
+-   collision: {coor: null, exist: false, pbc_coor: null}
+    energy: -20813.714
+    energy_density: -4.582
+    initial_coordinate: [28.0, 12.0, 18.0]
+    rotation: [0, 180, 180]
+-   collision:
+        coor: [-55.653, 61.872, 27.26]
+        exist: true
+        pbc_coor: [37.255, 29.687, 27.26]
+    energy: -20783.872
+    energy_density: -4.575
+    initial_coordinate: [28.0, 22.0, 3.0]
+    rotation: [0, 180, 180]
+-   collision:
+        coor: [-61.87, 63.094, 53.124]
+        exist: true
+        pbc_coor: [49.62, 20.181, 22.78]
+    energy: -20332.886
+    energy_density: -4.476
+    initial_coordinate: [19.0, 17.0, 10.0]
+    rotation: [0, 180, 180]
+-   collision:
+        coor: [-62.95, -42.911, -23.123]
+        exist: true
+        pbc_coor: [29.959, 32.186, 7.22]
+    energy: -20311.245
+    energy_density: -4.471
+    initial_coordinate: [28.0, 11.0, 20.0]
+    rotation: [0, 0, 0]
+-   collision:
+        coor: [-92.836, -53.07, -28.661]
+        exist: true
+        pbc_coor: [37.236, 22.027, 1.683]
+    energy: -18755.765
+    energy_density: -4.129
+    initial_coordinate: [24.0, 19.0, 19.0]
+    rotation: [0, 0, 0]
+-   collision:
+        coor: [-62.95, 85.911, 54.124]
+        exist: true
+        pbc_coor: [29.959, 10.814, 23.78]
+    energy: -17043.699
+    energy_density: -3.752
+    initial_coordinate: [28.0, 32.0, 11.0]
+    rotation: [0, 180, 180]
+-   collision:
+        coor: [-82.534, 76.187, -53.201]
+        exist: true
+        pbc_coor: [28.956, 33.274, 7.487]
+    energy: -14735.541
+    energy_density: -3.244
+    initial_coordinate: [33.0, 22.0, 12.0]
+    rotation: [90, 0, 0]
+-   collision:
+        coor: [-41.377, 76.187, 132.236]
+        exist: true
+        pbc_coor: [32.949, 33.274, 10.861]
+    energy: -14458.262
+    energy_density: -3.183
+    initial_coordinate: [33.0, 22.0, 22.0]
+    rotation: [0, 90, 270]
+-   collision:
+        coor: [-69.243, -8.482, 70.527]
+        exist: true
+        pbc_coor: [42.247, 34.43, 9.839]
+    energy: -14312.783
+    energy_density: -3.151
+    initial_coordinate: [33.0, 24.0, 13.0]
+    rotation: [90, 180, 180]
+-   collision:
+        coor: [-69.243, 50.482, -40.527]
+        exist: true
+        pbc_coor: [42.247, 7.57, 20.161]
+    energy: -14189.22
+    energy_density: -3.124
+    initial_coordinate: [33.0, 18.0, 17.0]
+    rotation: [90, 0, 0]
+-   collision:
+        coor: [-69.243, 51.482, -40.527]
+        exist: true
+        pbc_coor: [42.247, 8.57, 20.161]
+    energy: -13847.974
+    energy_density: -3.049
+    initial_coordinate: [33.0, 19.0, 17.0]
+    rotation: [90, 0, 0]
+-   collision:
+        coor: [-59.948, -14.579, 74.586]
+        exist: true
+        pbc_coor: [51.542, 28.334, 13.898]
+    energy: -13803.213
+    energy_density: -3.039
+    initial_coordinate: [33.0, 24.0, 14.0]
+    rotation: [90, 180, 180]
+-   collision:
+        coor: [-41.377, -33.187, -102.236]
+        exist: true
+        pbc_coor: [32.949, 9.726, 19.139]
+    energy: -13757.787
+    energy_density: -3.029
+    initial_coordinate: [33.0, 21.0, 8.0]
+    rotation: [0, 270, 270]
+-   collision:
+        coor: [-82.534, -33.187, 83.201]
+        exist: true
+        pbc_coor: [28.956, 9.726, 22.513]
+    energy: -13655.394
+    energy_density: -3.006
+    initial_coordinate: [33.0, 21.0, 18.0]
+    rotation: [90, 180, 180]
+-   collision:
+        coor: [-70.243, -8.482, 70.527]
+        exist: true
+        pbc_coor: [41.247, 34.43, 9.839]
+    energy: -13286.278
+    energy_density: -2.925
+    initial_coordinate: [32.0, 24.0, 13.0]
+    rotation: [90, 180, 180]
+-   collision:
+        coor: [-59.948, 50.63, -34.759]
+        exist: true
+        pbc_coor: [70.124, 39.902, 25.929]
+    energy: -13181.278
+    energy_density: -2.902
+    initial_coordinate: [33.0, 19.0, 16.0]
+    rotation: [90, 0, 0]
+-   collision:
+        coor: [-70.243, 51.482, -40.527]
+        exist: true
+        pbc_coor: [41.247, 8.57, 20.161]
+    energy: -12433.724
+    energy_density: -2.737
+    initial_coordinate: [32.0, 19.0, 17.0]
+    rotation: [90, 0, 0]
+---
+summary:
+    node: n18
+    percent: [0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85,
+        90, 95]
+    pid: 64556
+    structure_count: [0, 0, 2, 2, 7, 9, 16, 16, 66, 69, 73, 87, 104, 109, 109, 109,
+        109, 109, 109, 109]
+    time: 124.14212250709534
+    trial_count: [0, 40426, 80852, 121278, 161704, 202130, 242556, 282982, 323408,
+        363834, 404260, 444686, 485112, 525538, 565964, 606390, 646816, 687242, 727668,
+        768094]
