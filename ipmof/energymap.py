@@ -234,3 +234,20 @@ def energy_map_atom_list(sim_par, force_field, mof_path_list):
         atom_list = qnd_atom_list(force_field, dummy_name, dummy_sigma, dummy_epsilon)
 
     return atom_list
+
+
+def get_mof_list(sim_par, sim_dir):
+    """
+    Generates a list of MOF objects using a given list of MOF file directories
+    """
+    if sim_par['core_database']:
+        # Create MOf list from CoRE database
+        mof_properties = core_mof_properties(sim_dir['core_path'])
+        sorted_mofs = core_mof_sort(mof_properties, sort='void_fraction', limit=0.85)
+        mof_path_list = core_mof_dir(sorted_mofs, sim_dir['mof_dir'])
+    else:
+        # Create MOF list by reading structure files from a directory
+        mof_path_list = os.listdir(sim_dir['mof_dir'])
+        mof_path_list = [os.path.join(sim_dir['mof_dir'], path) for path in mof_path_list]
+
+    return mof_path_list
