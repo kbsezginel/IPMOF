@@ -94,10 +94,18 @@ the directories you want to use. You can use methods in _~/ipmof/parameters.py_ 
 
 ### Documents
 To get a better understanding of the functions used in ipmof libraries and/or analyze your
-results you can go through jupyter notebook files in _~/doc_' directory.
+results you can go through jupyter notebook files in _~/doc/Notebooks_ directory.
 
-This directory also contains force field parameters (UFF and DRE) and supplementary information for
+Notebooks list:
+- MOF-5 Example Run (Energymap generation and interpenetration test)
+- Hetero-interpenetration Test (LEHXUT + XAMDUM02)
+- Supercell Generation (LEHXUT + XAMDUM02)
+- [CoRE Database][CORE-ref] Usage 
+
+The _~/doc_ directory also contains force field parameters (UFF and DRE) and supplementary information for
 MOFs in [CoRE database][CORE-ref].
+
+Candidate interpenetrated structures are given in _~/doc/Candidates/Structures_. More information on these structures and literature references are provided in _/doc/Candidates/CandidatesInformation.xlsx_.
 
 ### Contact
 For any questions, ideas or feedback please contact me!
