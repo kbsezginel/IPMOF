@@ -3,7 +3,8 @@ pyyaml
 numpy
 matplotlib
 ase
-openbabel
+mathutils
+tabulate
 
 ## for PITT HPC integration
 redis

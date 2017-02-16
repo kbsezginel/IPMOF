@@ -19,7 +19,7 @@ mof_path_list = get_mof_list(sim_par, sim_dir)
 atom_list = energy_map_atom_list(sim_par, force_field, mof_path_list)
 
 # Export initialization file containing MOF names and simulation parameters
-print('Starting energy map calculation for', len(mof_path_list), 'MOFs (grid size:',
+print('Starting energy map calculation for', len(mof_path_list), 'MOF(s) (grid size:',
       sim_par['grid_size'], '| cut-off radius:', str(sim_par['cut_off']) + ')')
 print('Atom list ->', atom_list['atom'])
 print('Energy map(s) will be exported in', sim_par['energy_map_type'], 'format')

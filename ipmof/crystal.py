@@ -3,19 +3,19 @@
 # Author: Kutay B. Sezginel
 import math
 import os
+
 from ipmof.forcefield import get_ff_parameters
-import ipmof.io as io
+from ipmof.io import ase
 
 
 class MOF:
     """
     MOF class that holds coordinate, atom name, and unit cell information
     """
-    def __init__(self, file_path, file_format='cif', reader='ase'):
+    def __init__(self, file_path, file_format='cif'):
         """
         Initialize MOF name, unit cell volume and parameters, atom names and coordinates, and
         unique atom names and coordinates.
-        reader -> ('babel' / 'ase')
         file_format -> ('cif' / 'dict' / 'mol2' / ...)
         """
         if file_format == 'dict':
@@ -23,13 +23,12 @@ class MOF:
             self.atom_coors = molecule['atom_coors']
             self.atom_names = molecule['atom_names']
             self.name = molecule['name']
+            self.path = file_path
         else:
             self.path = file_path
             self.name, file_format = os.path.splitext(os.path.basename(file_path))
             file_format = file_format[1:]
-            # Import reader library from ipmof.io and read structure file into a dictionary
-            reader_lib = __import__('ipmof.io.' + reader, fromlist=[''])
-            molecule = reader_lib.read(file_path, input_format=file_format)
+            self.ase_atoms, molecule = ase.read(file_path, input_format=file_format)
 
             self.atom_coors = molecule['atom_coors']
             self.atom_names = molecule['atom_names']
@@ -37,6 +36,7 @@ class MOF:
             self.uc_angle = molecule['uc_angle']
             self.separate_atoms()
             self.unit_cell_volume()
+            self.pbc_parameters()
 
     def __repr__(self):
         return "<MOF object: %s>" % (self.name)
@@ -65,11 +65,20 @@ class MOF:
             self.sigma.append(ff_param[i][1])
             self.epsilon.append(ff_param[i][2])
 
-    def extend_unit_cell(self, cut_off):
+    def calculate_vectors(self):
+        """ Calculates unit cell vectors and edge points """
+        self.uc_vectors = Packing.uc_vectors(self.uc_size, self.uc_angle)
+        self.edge_points = Packing.edge_points(self.uc_vectors)
+
+    def extend_unit_cell(self, cut_off=None, pack=None):
         """
-        Extends unit cell of a MOF object according to a given cut_off value.
-        The structure is extended so that all the points in the center unit cell are
-        at least *cut_off Angstroms away.
+        Extends unit cell of a MOF object according to a given cut_off value or packing list.
+        If both are given pack argument has priority over cut_off.
+        - pack=[x, y, z]
+            Extends unit cell [(x) x (y) x (z)]
+        - cut_off=*number
+            The structure is extended so that all the points in the center unit cell are
+            at least *cut_off Angstroms away.
         This enables energy map calculation by providing coordinates for surrounding atoms.
         Also enables checking for collisions in the extended unit cell of mobile layer
         and energy map.
@@ -77,11 +86,15 @@ class MOF:
         - A high cut off value such as 100 Angstrom can be used to ensure there is no collisions
         between the interpenetrating layers.
         """
-        self.packing_factor = Packing.factor(self.uc_size, cut_off)
-        uc_vectors = Packing.uc_vectors(self.uc_size, self.uc_angle)
-        trans_vec = Packing.translation_vectors(self.packing_factor, uc_vectors)
-        self.packed_coors = Packing.uc_coors(trans_vec, self.packing_factor, uc_vectors, self.atom_coors)
-        self.edge_points = Packing.edge_points(uc_vectors)
+        self.calculate_vectors()
+        if pack is not None:
+            self.packing_factor = pack
+        elif cut_off is not None:
+            self.packing_factor = Packing.factor(self.uc_size, cut_off)
+        else:
+            print('Please enter packing factor or cut_off value!')
+        trans_vec = Packing.translation_vectors(self.packing_factor, self.uc_vectors)
+        self.packed_coors = Packing.uc_coors(trans_vec, self.packing_factor, self.uc_vectors, self.atom_coors)
 
         extended_structure = {'atom_names': [], 'atom_coors': [], 'name': self.name}
         for unit_cell in self.packed_coors:
@@ -139,6 +152,43 @@ class MOF:
         self.ucv = volume
         self.frac_ucv = frac_volume
 
+    def pbc_parameters(self):
+        """
+        Calculates constants used in periodic boundary conditions.
+        """
+        uc_cos = [math.cos(math.radians(a)) for a in self.uc_angle]
+        uc_sin = [math.sin(math.radians(a)) for a in self.uc_angle]
+        a, b, c = self.uc_size
+        v = self.frac_ucv
+
+        xf1 = 1 / a
+        xf2 = - uc_cos[2] / (a * uc_sin[2])
+        xf3 = (uc_cos[0] * uc_cos[2] - uc_cos[1]) / (a * v * uc_sin[2])
+        yf1 = 1 / (b * uc_sin[2])
+        yf2 = (uc_cos[1] * uc_cos[2] - uc_cos[0]) / (b * v * uc_sin[2])
+        zf1 = uc_sin[2] / (c * v)
+        self.to_frac = [xf1, xf2, xf3, yf1, yf2, zf1]
+
+        xc1 = a
+        xc2 = b * uc_cos[2]
+        xc3 = c * uc_cos[1]
+        yc1 = b * uc_sin[2]
+        yc2 = c * (uc_cos[0] - uc_cos[1] * uc_cos[2]) / uc_sin[2]
+        zc1 = c * v / uc_sin[2]
+        self.to_car = [xc1, xc2, xc3, yc1, yc2, zc1]
+
+    def clone(self):
+        """
+        Clones MOF object into a new MOF object
+        """
+        if type(self.path) is str:
+            clone_mof = MOF(self.path)
+        elif type(self.path) is dict:
+            clone_mof = MOF(self.path, file_format='dict')
+        if hasattr(self, 'packing_factor'):
+            clone_mof.extend_unit_cell(pack=self.packing_factor)
+        return clone_mof
+
     def join(self, new_mof, colorify=False, atom_color=['C', 'O']):
         """
         Combines atom names and coordinates of two given structure dictionaries.
@@ -149,11 +199,14 @@ class MOF:
         new_atom_name = atom_color[1]
         joined_atom_names = []
         joined_atom_coors = []
+        joined_ase_atoms = self.ase_atoms.copy()
 
         if colorify:
+            joined_ase_atoms.set_chemical_symbols([base_atom_name] * len(self.atom_names))
             for coor in new_mof.atom_coors:
                 joined_atom_names.append(new_atom_name)
                 joined_atom_coors.append(coor)
+                joined_ase_atoms.append(ase.ase_atom(symbol=new_atom_name, position=coor))
 
             for coor in self.atom_coors:
                 joined_atom_names.append(base_atom_name)
@@ -163,6 +216,7 @@ class MOF:
             for atom, coor in zip(new_mof.atom_names, new_mof.atom_coors):
                 joined_atom_names.append(atom)
                 joined_atom_coors.append(coor)
+                joined_ase_atoms.append(ase.ase_atom(symbol=atom, position=coor))
 
             for atom, coor in zip(self.atom_names, self.atom_coors):
                 joined_atom_names.append(atom)
@@ -171,6 +225,7 @@ class MOF:
         joined_structure = {'atom_names': joined_atom_names, 'atom_coors': joined_atom_coors}
         joined_structure['name'] = self.name + '_' + new_mof.name
         joined_mof = MOF(joined_structure, file_format='dict')
+        joined_mof.ase_atoms = joined_ase_atoms
 
         return joined_mof
 
@@ -191,6 +246,10 @@ class MOF:
                 xyz_file.write(self.name + '\n')
                 for atom, coor in zip(self.atom_names, self.atom_coors):
                     xyz_file.write(atom + ' ' + str(coor[0]) + ' ' + str(coor[1]) + ' ' + str(coor[2]) + '\n')
+
+        else:
+            file_path = os.path.join(export_dir, self.name + '.' + file_format)
+            ase.write(file_path, self.ase_atoms, file_format=file_format)
 
 
 class Packing:

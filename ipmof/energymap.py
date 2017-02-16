@@ -33,7 +33,7 @@ def energy_map(sim_par, mof_path, atom_list, force_field, export=True, export_di
     # Initialize MOF and extend structure for energy map calculation
     mof = MOF(mof_path)
     mof.set_force_field(force_field)
-    extended_structure = mof.extend_unit_cell(sim_par['cut_off'])
+    extended_structure = mof.extend_unit_cell(cut_off=sim_par['cut_off'])
     # Read cut-off and grid size from simulation parameters
     cut_off = sim_par['cut_off']
     grid_size = sim_par['grid_size']
@@ -89,22 +89,13 @@ def energy_map(sim_par, mof_path, atom_list, force_field, export=True, export_di
         return energy_map
 
 
-def energy_map_index(coor, emap_max, emap_min):
+def energy_map_index(coor, x_length, y_length):
     """
     Finds index of a coordinate in the energy map. Only works for grid_size = 1.
-    emap_max = [emap[-1][0], emap[-1][1], emap[-1][2]]
-    emap_min = [emap[0][0], emap[0][1], emap[0][2]]
+    side_length = [emap[-1][0] - emap[0][0] + 1, emap[-1][1] - emap[0][1] + 1, emap[-1][2] - emap[0][2] + 1]
+    x_length, y_length = int(side_length[1] * side_length[2]), int(side_length[2])
     """
-    side_length = []
-    round_coor = []
-
-    for c, emax, emin in zip(coor, emap_max, emap_min):
-        side_length.append(emax - emin + 1)
-        round_coor.append(round(c))
-    emap_index = round_coor[0] * side_length[1] * side_length[2]
-    emap_index += round_coor[1] * side_length[2] + round_coor[2]
-
-    return int(emap_index)
+    return int(round(coor[0]) * x_length + round(coor[1]) * y_length + round(coor[2]))
 
 
 def energy_map_atom_index(atom_name, atom_list):
@@ -170,23 +161,6 @@ def coor_dist(coor1, coor2):
     Calculates distance between two given coordinates: [x1, y1, z1] and [x2, y2, z2]
     """
     return sqrt((coor1[0] - coor2[0])**2 + (coor1[1] - coor2[1])**2 + (coor1[2] - coor2[2])**2)
-
-
-def get_mof_list(sim_par, sim_dir):
-    """
-    Generates a list of MOF objects using a given list of MOF file directories
-    """
-    if sim_par['core_database']:
-        # Create MOf list from CoRE database
-        mof_properties = core_mof_properties(sim_dir['core_path'])
-        sorted_mofs = core_mof_sort(mof_properties, sort='void_fraction', limit=0.85)
-        mof_path_list = core_mof_dir(sorted_mofs, sim_dir['mof_dir'])
-    else:
-        # Create MOF list by reading structure files from a directory
-        mof_path_list = os.listdir(sim_dir['mof_dir'])
-        mof_path_list = [os.path.join(sim_dir['mof_dir'], path) for path in mof_path_list]
-
-    return mof_path_list
 
 
 def uniq_atom_list(mof_path_list, force_field):
@@ -260,3 +234,20 @@ def energy_map_atom_list(sim_par, force_field, mof_path_list):
         atom_list = qnd_atom_list(force_field, dummy_name, dummy_sigma, dummy_epsilon)
 
     return atom_list
+
+
+def get_mof_list(sim_par, sim_dir):
+    """
+    Generates a list of MOF objects using a given list of MOF file directories
+    """
+    if sim_par['core_database']:
+        # Create MOf list from CoRE database
+        mof_properties = core_mof_properties(sim_dir['core_path'])
+        sorted_mofs = core_mof_sort(mof_properties, sort='void_fraction', limit=0.85)
+        mof_path_list = core_mof_dir(sorted_mofs, sim_dir['mof_dir'])
+    else:
+        # Create MOF list by reading structure files from a directory
+        mof_path_list = os.listdir(sim_dir['mof_dir'])
+        mof_path_list = [os.path.join(sim_dir['mof_dir'], path) for path in mof_path_list]
+
+    return mof_path_list

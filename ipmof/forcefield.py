@@ -2,8 +2,9 @@
 # Date: June 2016
 # Author: Kutay B. Sezginel
 import os
-import xlrd
 import math
+
+import xlrd
 import numpy as np
 
 
