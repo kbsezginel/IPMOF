@@ -105,7 +105,14 @@ Notebooks list:
 The _~/doc_ directory also contains force field parameters (UFF and DRE) and supplementary information for
 MOFs in [CoRE database][CORE-ref].
 
-Candidate interpenetrated structures are given in _~/doc/Candidates/Structures_. More information on these structures and literature references are provided in _/doc/Candidates/CandidatesInformation.xlsx_.
+#### Candidate Structures
+Candidate interpenetrated structures are given in _~/doc/Candidates/Structures_:
+- 1%-tolerance: All candidates that yield reasonable supercells with 1% cell distortion tolerance.
+- 5%-tolerance: All other candidates that yield reasonable supercells with 5% cell distortion tolerance.
+
+Any other candidate that are not given in these folders were omitted since they gave unreasonably large supercells up to 5% cell tolerance.
+
+More information on these structures and literature references are provided in _/doc/Candidates/CandidatesInformation.xlsx_.
 
 ### Contact
 For any questions, ideas or feedback please contact me!
