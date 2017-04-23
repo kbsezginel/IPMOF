@@ -5,9 +5,17 @@
 ## Installation
 IPMOF uses Python 3.5.1 with required libraries listed in requirements.txt file.
 
-To install dependencies just type:
+You can install IPMOF by cloning the repository and running setup.py as follows:
 
-`pip install -r requirements.txt`
+`git clone https://github.com/kbsezginel/IPMOF.git`
+
+`cd IPMOF`
+
+`python setup.py install`
+
+If you wish to use HPC capabilities you need to install other dependencies:
+
+`pip install -r requirements_hpc.txt`
 
 ## Usage
 IPMOF reads structure files from the mof folder in root directory.
@@ -106,13 +114,7 @@ The _~/doc_ directory also contains force field parameters (UFF and DRE) and sup
 MOFs in [CoRE database][CORE-ref].
 
 #### Candidate Structures
-Candidate interpenetrated structures are given in _~/doc/Candidates/Structures_:
-- 1%-tolerance: All candidates that yield reasonable supercells with 1% cell distortion tolerance.
-- 5%-tolerance: All other candidates that yield reasonable supercells with 5% cell distortion tolerance.
-
-Any other candidate that are not given in these folders were omitted since they gave unreasonably large supercells up to 5% cell tolerance.
-
-More information on these structures and literature references are provided in _/doc/Candidates/CandidatesInformation.xlsx_.
+Candidate interpenetrated structure files can be accessed here -> [IPMOF-candidates](https://github.com/kbsezginel/IPMOF-candidates)
 
 ### Contact
 For any questions, ideas or feedback please contact me!
