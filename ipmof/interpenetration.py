@@ -5,6 +5,7 @@ import os
 import shutil
 import time
 import math
+import yaml
 from random import random
 from glob import glob
 
@@ -377,7 +378,9 @@ def get_interpenetration_list(sim_par, sim_dir):
 
     Format: interpenetration_list = {'emap_path': [], 'emap_mof_path': [], 'ip_mof_path': []}
     """
-    if sim_par['core_database']:
+    if sim_par['interpenetration_list'] is not None:
+        interpenetration_list = yaml.load(open(sim_par['interpenetration_list'], 'r'))
+    elif sim_par['core_database']:
         if sim_par['core_limit'] is not None:
             interpenetration_list = core_interpenetration_list(sim_dir, limit=sim_par['core_limit'])
         else:
