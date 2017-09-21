@@ -17,7 +17,7 @@ before_install:
   - cmake .
   - make
   - sudo make install
-  - cd ../IPMOF
+  - cd $TRAVIS_BUILD_DIR
 
 install:
   - pip install pytest
