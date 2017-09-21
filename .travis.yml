@@ -12,7 +12,7 @@ before_install:
   - df -h
   - ulimit -a
   - sudo apt-get install python3-pip python-dev python3-dev
-  - git clone https://gitlab.com/ideasman42/blender-mathutils.git
+  - git clone https://gitlab.com/kbsezginel/blender-mathutils.git
   - cd blender-mathutils
   - cmake .
   - make
