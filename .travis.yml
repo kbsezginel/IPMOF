@@ -17,6 +17,7 @@ before_install:
   - cmake .
   - make
   - sudo make install
+  - cd ../IPMOF
 
 install:
   - pip install pytest
