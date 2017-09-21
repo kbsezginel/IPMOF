@@ -1,0 +1,33 @@
+language: python
+
+# Run jobs on container-based infrastructure, can be overridden per job
+sudo: false
+
+python:
+  - "3.5"
+
+before_install:
+  - uname -a
+  - free -m
+  - df -h
+  - ulimit -a
+  - sudo apt-get install python3-pip python-dev python3-dev
+  - git clone https://gitlab.com/kbsezginel/blender-mathutils.git
+  - cd blender-mathutils
+  - cmake .
+  - make
+  - sudo make install
+  - cd $TRAVIS_BUILD_DIR
+
+install:
+  - pip install pytest
+  - pip install --only-binary=numpy,scipy numpy scipy
+
+before_script:
+  - python -V
+
+script:
+  - python setup.py install
+
+notifications:
+  email: false

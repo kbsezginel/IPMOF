@@ -1,8 +1,6 @@
 import os
 from setuptools import setup, find_packages
 
-with open('requirements.txt') as f:
-    requirements = f.read().splitlines()
 
 setup(
     name="ipmof",
@@ -10,7 +8,14 @@ setup(
     description="Interpenetrating MOFs",
     author="Kutay B. Sezginel",
     author_email="kbs37@pitt.edu",
-    install_requires=requirements,
+    install_requires=[
+        'xlrd',
+        'pyyaml',
+        'numpy',
+        'matplotlib',
+        'ase',
+        'tabulate'
+    ],
     packages=find_packages(),
     include_package_data=True
 )
