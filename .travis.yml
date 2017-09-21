@@ -14,8 +14,9 @@ before_install:
   - sudo apt-get install python3-pip python-dev python3-dev
   - git clone https://gitlab.com/ideasman42/blender-mathutils.git
   - cd blender-mathutils
-  - python setup.py build
-  - sudo python setup.py install
+  - cmake .
+  - make
+  - sudo make install
 
 install:
   - pip install pytest
