@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.org/kbsezginel/IPMOF.svg?branch=webpage)](https://travis-ci.org/kbsezginel/IPMOF)
 # IPMOF
 ### Discovering interpenetration in MOFs
 ![alt text][Fig0]
@@ -78,7 +79,7 @@ Simulation summary, simulation parameters, and information on discovered structu
 
 **Rotational limit:** The number of times a rotation is performed for same initial coordinate. For high-throughput screening all possible 90° rotations (24 total) were performed for each point.
 
-**Energy limit:** There are three types of energy limit defined in the algorithm: atom energy limit, structure energy limit, and energy density limit. 
+**Energy limit:** There are three types of energy limit defined in the algorithm: atom energy limit, structure energy limit, and energy density limit.
 - Atom energy limit is the maximum allowed energy for insertion of a single atom.
 - Structure energy limit is the maximum allowed energy for insertion of a collection of atoms that constitute the active structure. It is calculated by summing the insertion energies for each atom in the unit cell.
 - Energy density limit is similar to structure energy limit however it is divided by the unit cell volume to make it more comparable among different structures. For unit cells with different sizes constituting different number of atoms we chose to have a universal energy limit scaled by the volume of the cell. The energy density, _ρ<sub>energy</sub>_, is calculated according to equation below,
@@ -108,7 +109,7 @@ Notebooks list:
 - MOF-5 Example Run (Energymap generation and interpenetration test)
 - Hetero-interpenetration Test (LEHXUT + XAMDUM02)
 - Supercell Generation (LEHXUT + XAMDUM02)
-- [CoRE Database][CORE-ref] Usage 
+- [CoRE Database][CORE-ref] Usage
 
 The _~/doc_ directory also contains force field parameters (UFF and DRE) and supplementary information for
 MOFs in [CoRE database][CORE-ref].
