@@ -10,6 +10,7 @@ rotation_freedom: 30
 try_all_rotations: false
 force_field: uff
 self_interpenetration: true
+interpenetration_list: None
 energy_map_atom_list: uniq
 energy_map_type: numpy
 report_structures: 10

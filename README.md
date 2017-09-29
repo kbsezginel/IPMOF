@@ -8,16 +8,25 @@ IPMOF uses Python 3.5.1 with required libraries listed in requirements.txt file.
 
 You can install IPMOF by cloning the repository and running setup.py as follows:
 
-`git clone https://github.com/kbsezginel/IPMOF.git`
-
-`cd IPMOF`
-
-`python setup.py install`
+```python
+git clone https://github.com/kbsezginel/IPMOF.git
+cd IPMOF
+python setup.py install
+```
 
 If you wish to use HPC capabilities you need to install other dependencies:
 
-`pip install -r requirements_hpc.txt`
+```python
+pip install -r requirements_hpc.txt
+```
 
+For mathutils python package (used in rotation operations), additional installation might be necessary.
+
+In linux the following dependency for mathutils can be installed by:
+
+```python
+sudo apt-get install python3-dev
+```
 ## Usage
 IPMOF reads structure files from the mof folder in root directory.
 
@@ -48,7 +57,9 @@ fashion: _full_ > _uniq_ > _qnd_ > _dummy_. All list types except for _uniq_ all
 
 **To generate energy map type following in a command-line window:**
 
-`python ipmof_energymap.py`
+```python
+python ipmof_energymap.py
+```
 
 By default this will create energy maps for each MOF file in _~/mof_ directory. The atom list and energy map are stored as a numpy array. This can be changed to a human readable format (yaml) by changing the _energy_map_type_ simulation parameter to _yaml_.
 
@@ -60,7 +71,9 @@ Energy map is required only for the _passive_ MOF (should be in _~/energymap_) a
 
 **To test intepenetration type following in a command-line window:**
 
-`python ipmof_interpenetration.py`
+```python
+python ipmof_interpenetration.py
+```
 
 Simulation summary, simulation parameters, and information on discovered structures will be exported to _~/results/*Structure1_Structure2*/results.yaml_. Methods to analyze results are included in _~ipmof/analysis.py_ library. The structures discovered will be exported to _~/results/*Structure1_Structure2*_.
 
