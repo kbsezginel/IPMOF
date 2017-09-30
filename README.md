@@ -6,7 +6,7 @@ IPMOF
 
 <p align="center"><img src="https://github.com/kbsezginel/IPMOF/blob/master/docs/img/Fig0.PNG"></p>
 
-Our publication using this library was futured on the front cover of CrsytEngComm:
+Our publication using this library was featured on the front cover of CrsytEngComm:
 
 Sezginel, K. B., T. Feng, and C. E. Wilmer. "[Discovery of hypothetical hetero-interpenetrated MOFs with arbitrarily dissimilar topologies and unit cell shapes](http://pubs.rsc.org/en/content/articlelanding/2017/ce/c7ce00290d)." CrystEngComm 19.31 (2017): 4497-4504. DOI: 10.1039/c7ce00290d
 
