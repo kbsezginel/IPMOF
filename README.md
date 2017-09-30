@@ -1,10 +1,23 @@
 [![Build Status](https://travis-ci.org/kbsezginel/IPMOF.svg?branch=webpage)](https://travis-ci.org/kbsezginel/IPMOF)
-# IPMOF
-### Discovering interpenetration in MOFs
-![alt text][Fig0]
 
-## Installation
-IPMOF uses Python 3.5.1 with required libraries listed in requirements.txt file.
+IPMOF
+=====
+### Discovering interpenetration in MOFs
+
+<p align="center"><img src="https://github.com/kbsezginel/IPMOF/blob/master/docs/img/Fig0.PNG"></p>
+
+Our publication using this library was futured on the front cover of CrsytEngComm:
+
+Sezginel, K. B., T. Feng, and C. E. Wilmer. "[Discovery of hypothetical hetero-interpenetrated MOFs with arbitrarily dissimilar topologies and unit cell shapes](http://pubs.rsc.org/en/content/articlelanding/2017/ce/c7ce00290d)." CrystEngComm 19.31 (2017): 4497-4504. DOI: 10.1039/c7ce00290d
+
+**Chemistry World article:**
+
+[Algorithm deliberately entangles MOFs.](https://www.chemistryworld.com/news/algorithm-deliberately-entangles-mofs/3007817.article)
+
+Installation
+------------
+
+IPMOF uses Python 3.5 with required libraries listed in requirements.txt file.
 
 You can install IPMOF by cloning the repository and running setup.py as follows:
 
@@ -27,7 +40,9 @@ In linux the following dependency for mathutils can be installed by:
 ```python
 sudo apt-get install python3-dev
 ```
-## Usage
+Usage
+-----
+
 IPMOF reads structure files from the mof folder in root directory.
 
 The default file reader is ASE and IPMOF supports all the file formats supported by ASE.
@@ -36,13 +51,16 @@ A list of the formats supported by ASE is given [here][ASE-formats].
 In order to test IPMOF there is one MOF file (MOF-5 / REFCODE: SAHYIK) in the 'mof' directory.
 Using default simulation parameters homo-interpenetrated MOF-5 structure can be generated in 'results' directory.
 
-## Algorithm Description
-![alt text][Animation1]
+Algorithm Description
+---------------------
+
+<p align="center"><img src="https://github.com/kbsezginel/IPMOF/blob/master/docs/img/UQOFOX_VEHJUP_rotation.gif"></p>
 
 IPMOF tests whether two given MOFs can interpenetrate each other by rapidly trying different relative orientations of the two frameworks and reports the plausibly energetically favorable ones. The algorithm tries many different orientations of two given MOFs by performing rotation and translation operations according to user configurable parameters. After an orientation is chosen, its energetic favorability is calculated based on the pairwise interactions between each atom on one framework with every atom on the other framework. Overall, IPMOF can rapidly detect cases where interpenetration is impossible, and suggest ones where it may be plausible. A flowchart is provided below.
 
-## Energy Map
-![alt text][Fig1]
+### Energy Map
+
+<p align="center"><img src="https://github.com/kbsezginel/IPMOF/blob/master/docs/img/Fig1.PNG"></p>
 
 An energy map is a regular grid of points representing the potential energy inside the crystal unit cell, from the perspective of an atom being inserted into that space. The potential energy for each point in the grid is calculated using [Lennard-Jones potential][LJ-Wikipedia] with built-in parameters provided for [Universal Force Field (UFF)][UFF-ref] and [DREIDING][DRE-ref] force fields.
 
@@ -63,8 +81,10 @@ python ipmof_energymap.py
 
 By default this will create energy maps for each MOF file in _~/mof_ directory. The atom list and energy map are stored as a numpy array. This can be changed to a human readable format (yaml) by changing the _energy_map_type_ simulation parameter to _yaml_.
 
-## Interpenetration
-![alt text][Fig2]
+### Interpenetration
+
+<p align="center"><img src="https://github.com/kbsezginel/IPMOF/blob/master/docs/img/Fig2.PNG"></p>
+
 After generating the energy map for the _passive_ MOF, an _active_ MOF is selected to test interpenetration. The _active_ unit cell is first aligned with the _passive_ unit cell and then rotated around the global _x, y,_ and _z_ axes by increments defined by the user. Then the _active_ unit cell is translated in _x, y,_ and _z_ directions, also by increments defined by the user, within the _passive_ unit cell. After testing all orientations the most favorable ones (if any) are reported.
 
 Energy map is required only for the _passive_ MOF (should be in _~/energymap_) and structure files (such as _cif_) are required for both MOFs (should be in _~/mof_).
@@ -78,7 +98,8 @@ python ipmof_interpenetration.py
 Simulation summary, simulation parameters, and information on discovered structures will be exported to _~/results/*Structure1_Structure2*/results.yaml_. Methods to analyze results are included in _~ipmof/analysis.py_ library. The structures discovered will be exported to _~/results/*Structure1_Structure2*_.
 
 ### Simulation Parameters
-![alt text][Fig5]
+
+<p align="center"><img src="https://github.com/kbsezginel/IPMOF/blob/master/docs/img/Fig5.PNG"></p>
 
 **Grid size:** The grid size if defined as the distance between grid points of the energy map in each dimension. The energy map is generated as a 3D rectangular grid that surrounds the unit cell. For high-throughput screening we used grid size of 1 Å for the generation of energy map.
 
@@ -97,7 +118,7 @@ Simulation summary, simulation parameters, and information on discovered structu
 - Structure energy limit is the maximum allowed energy for insertion of a collection of atoms that constitute the active structure. It is calculated by summing the insertion energies for each atom in the unit cell.
 - Energy density limit is similar to structure energy limit however it is divided by the unit cell volume to make it more comparable among different structures. For unit cells with different sizes constituting different number of atoms we chose to have a universal energy limit scaled by the volume of the cell. The energy density, _ρ<sub>energy</sub>_, is calculated according to equation below,
 
-   <img src="https://github.com/kbsezginel/IPMOF/blob/master/doc/Figures/Fig6.PNG" width="300">
+<p align="center"><img src="https://github.com/kbsezginel/IPMOF/blob/master/docs/img/Fig6.PNG" width="300"></p>
 
 where _N<sub>p</sub>_ and _N<sub>a</sub>_ are number of atoms in active and passive MOFs; _i_ and _j_ are atom indices for passive and active MOFs; _V<sub>LJ</sub>_ is interatomic potential (Lennard-Jones) energy, and _V<sub>cell</sub>_ is unit cell volume in Å<sup>3</sup>.
 
@@ -111,18 +132,17 @@ Without the _sim_par.yaml_ file default simulation parameters are read from _~/i
 Default directories to read input files such as energy maps, MOF files and output result files
 are read from _~/ipmof/parameters.py_.
 
-If you wish to use different directories export sim_dir.yaml file into _~/settings_ folder with
-the directories you want to use. You can use methods in _~/ipmof/parameters.py_ to export this file.
+If you wish to use different directories export sim_dir.yaml file into _~/settings_ folder with the directories you want to use. You can use methods in _~/ipmof/parameters.py_ to export this file.
 
 ### Documents
 To get a better understanding of the functions used in ipmof libraries and/or analyze your
 results you can go through jupyter notebook files in _~/doc/Notebooks_ directory.
 
 Notebooks list:
-- MOF-5 Example Run (Energymap generation and interpenetration test)
-- Hetero-interpenetration Test (LEHXUT + XAMDUM02)
-- Supercell Generation (LEHXUT + XAMDUM02)
-- [CoRE Database][CORE-ref] Usage
+-   MOF-5 Example Run (Energymap generation and interpenetration test)
+-   Hetero-interpenetration Test (LEHXUT + XAMDUM02)
+-   Supercell Generation (LEHXUT + XAMDUM02)
+-   [CoRE Database][CORE-ref] Usage
 
 The _~/doc_ directory also contains force field parameters (UFF and DRE) and supplementary information for
 MOFs in [CoRE database][CORE-ref].
@@ -133,19 +153,14 @@ Candidate interpenetrated structure files can be accessed here -> [IPMOF-candida
 ### Contact
 For any questions, ideas or feedback please contact me!
 
-mail: kbs37@pitt.edu
+Mail: kbs37@pitt.edu
 
-http://wilmerlab.com/
+Web:
+-   [kbsezginel.github.io](https://kbsezginel.github.io)
+-   [WilmerLab](http://wilmerlab.com/)
 
 ### Algorithm Flowsheet
-![alt text][Fig3]
-
-[Fig0]: https://github.com/kbsezginel/IPMOF/blob/master/doc/Figures/Fig0.PNG "CandidateStructures"
-[Fig1]: https://github.com/kbsezginel/IPMOF/blob/master/doc/Figures/Fig1.PNG "Energymap"
-[Fig2]: https://github.com/kbsezginel/IPMOF/blob/master/doc/Figures/Fig2.PNG "Interpenetration"
-[Fig3]: https://github.com/kbsezginel/IPMOF/blob/master/doc/Figures/Fig3.PNG "AlgorithmFlowsheet"
-[Fig5]: https://github.com/kbsezginel/IPMOF/blob/master/doc/Figures/Fig5.PNG "SimulationParameters"
-[Animation1]:  https://github.com/kbsezginel/IPMOF/blob/master/doc/Figures/UQOFOX_VEHJUP_rotation.gif "Rotation"
+<p align="center"><img src="https://github.com/kbsezginel/IPMOF/blob/master/docs/img/Fig3.PNG"></p>
 
 [ASE-formats]: https://wiki.fysik.dtu.dk/ase/ase/io/io.html
 [LJ-wikipedia]: https://en.wikipedia.org/wiki/Lennard-Jones_potential
