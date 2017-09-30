@@ -45,8 +45,9 @@ In linux the following dependency for mathutils can be installed by:
 ```python
 sudo apt-get install python3-dev
 ```
+
 Usage
------
+------
 
 IPMOF reads structure files from the mof folder in root directory.
 
