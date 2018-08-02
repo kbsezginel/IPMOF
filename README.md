@@ -54,7 +54,7 @@ Using default simulation parameters homo-interpenetrated MOF-5 structure can be 
 Algorithm Description
 ---------------------
 
-<p align="center"><img src="https://github.com/kbsezginel/IPMOF/blob/master/docs/img/UQOFOX_VEHJUP_rotation.gif"></p>
+<p align="center"><img src="https://github.com/kbsezginel/IPMOF/blob/master/docs/img/ipmof-rotation.gif"></p>
 
 IPMOF tests whether two given MOFs can interpenetrate each other by rapidly trying different relative orientations of the two frameworks and reports the plausibly energetically favorable ones. The algorithm tries many different orientations of two given MOFs by performing rotation and translation operations according to user configurable parameters. After an orientation is chosen, its energetic favorability is calculated based on the pairwise interactions between each atom on one framework with every atom on the other framework. Overall, IPMOF can rapidly detect cases where interpenetration is impossible, and suggest ones where it may be plausible. A flowchart is provided below.
 
